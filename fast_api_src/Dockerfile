@@ -29,4 +29,4 @@ COPY . .
 
 USER alex
 
-CMD ["uvicorn", "main:app", "--reload"]
+CMD ["uvicorn", "main:app", "--reload", "--host", "0.0.0.0"]
