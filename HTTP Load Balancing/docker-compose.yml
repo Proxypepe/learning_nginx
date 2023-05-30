@@ -1,0 +1,28 @@
+---
+version: "3"
+
+services:
+
+  nginx:
+    image: nginx:1.22.1
+    ports:
+    - 8181:80
+    volumes:
+    - ./config/nginx.conf:/etc/nginx/nginx.conf
+    - ./config/app.conf:/etc/nginx/conf.d/default.conf
+
+
+  fastapi.app1:
+    build: ./app
+    ports:
+    - 8001:8000
+  
+  fastapi.app2:
+    build: ./app
+    ports:
+    - 8002:8000
+
+  fastapi.app3:
+    build: ./app
+    ports:
+    - 8003:8000
