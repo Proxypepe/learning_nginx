@@ -1,0 +1,13 @@
+---
+version: "3"
+
+services:
+
+  nginx:
+    build: .
+    container_name: geoIP-nginx
+    ports:
+    - 8181:80
+    volumes:
+    - ./nginx.conf:/etc/nginx/nginx.conf
+    - ./sitev1/:/var/www/sitev1/
