@@ -1,0 +1,52 @@
+---
+version: "3"
+
+services:
+
+  nginx:
+    image: nginx:1.22.1
+    container_name: load-balancer
+    ports:
+    - 8181:80
+    - 3306:3306
+    volumes:
+        - ./config/nginx.conf:/etc/nginx/nginx.conf
+        - ./config/mysql_reads.conf:/etc/nginx/stream.conf.d/mysql_reads.conf
+    depends_on:
+        - read1.example.com
+        
+  read1.example.com:
+    image: mysql:8
+    container_name: db-master
+    ports:
+      - 3307:3306
+    volumes:
+        - ./build_env/mysql/master.cnf:/etc/my.cnf.d/repl.cnf
+        - ./build_env/mysql/master.sql:/docker-entrypoint-initdb.d/start.sql
+    environment:
+        MYSQL_ROOT_PASSWORD: "secret"
+
+  read2.example.com:
+    image: mysql:8
+    container_name: db-slave1
+    ports:
+      - 3308:3306
+    volumes:
+        - ./build_env/mysql/slave1.cnf:/etc/my.cnf
+        - ./build_env/mysql/slave.sql:/docker-entrypoint-initdb.d/start.sql
+    depends_on:
+        - read1.example.com
+    environment:
+        MYSQL_ROOT_PASSWORD: "secret"
+
+  read3.example.com:
+    image: mysql:8
+    container_name: db-slave2
+    volumes:
+        - ./build_env/mysql/slave2.cnf:/etc/my.cnf
+        - ./build_env/mysql/slave.sql:/docker-entrypoint-initdb.d/start.sql
+    depends_on:
+        - read1.example.com
+    environment:
+        MYSQL_ROOT_PASSWORD: "secret"
+  
