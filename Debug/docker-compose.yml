@@ -1,0 +1,21 @@
+---
+version: "3"
+
+services:
+
+  nginx:
+    image: nginx:1.22.1
+    container_name: program-nginx
+    ports:
+    - 8181:80
+    volumes:
+    - ./nginx.conf:/etc/nginx/nginx.conf
+    - ./jager/jaeger-cong.json:/etc/jaeger/jaeger-config.json
+    - ./zipkin/zipkin-config.json:/etc/zipkin/zipkin-config.json
+
+
+  jaeger:
+    image: jaegertracing/all-in-one
+
+  zipkin:
+    image: openzipkin/zipkin
